@@ -18,11 +18,13 @@ for MAP_FILE in "$MAP_DIR"*; do
 
 	echo -e "\033[1;33m$BASE_NAME:\033[0m"
 	if [ "$OUTPUT" == "$EXPECTED" ]; then
+		echo "Output   - $OUTPUT"
+		echo "Solution - $EXPECTED"
 		echo "✅"
 		echo
 	else
-		echo "$OUTPUT"
-		echo "$EXPECTED"
+		echo "Output   - $OUTPUT"
+		echo "Solution - $EXPECTED"
 		echo "❌"
 		echo
 	fi

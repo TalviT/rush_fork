@@ -64,7 +64,7 @@ fn search_square(map: Map) -> Square {
                     pos: Point { x, y },
                     size: size - 1,
                 }; // @note size or size - 1??
-                println!("New Square: {}", max_sq);
+                //println!("New Square: {}", max_sq);
                 size += 1;
             }
         } else if x + size >= map.width {
@@ -78,7 +78,7 @@ fn search_square(map: Map) -> Square {
 }
 
 fn check_square(map: &Map, pos: Point, size: usize) -> bool {
-    println!("{}", pos.y + size);
+   // println!("{}", pos.y + size);
     for y in pos.y..(pos.y + size) {
         if map.data[y][pos.x..(pos.x + size)].contains("o") {
             return false;
