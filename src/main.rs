@@ -54,7 +54,7 @@ fn search_square(map: Map) -> Square {
     let mut x = 0;
     let mut y = 0;
 
-    while y + size <= map.height {
+    while y + size <= map.height && x + size <= map.width {
         if check_square(&map, Square { x, y, size }) {
             if size > max_sq.size {
                 max_sq = Square {
