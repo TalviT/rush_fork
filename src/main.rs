@@ -5,7 +5,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 struct Point {
-    x: usize,
+	x: usize,
     y: usize,
 }
 
@@ -60,10 +60,11 @@ fn search_square(map: Map) -> Square {
     while y + size < map.height {
         if check_square(&map, Point {x, y}, size) {
             if size > max_sq.size {
-                max_sq = Square {pos: Point {x, y}, size};
+                max_sq = Square {pos: Point {x, y}, size: size - 1};		// @note size or size - 1??
                 println!("New Square: {}", max_sq);
+				size += 1;
             }
-            size += 1;
+
         } else if x + size >= map.width {
             x = 0;
             y += 1;
@@ -75,6 +76,8 @@ fn search_square(map: Map) -> Square {
 }
 
 fn check_square(map: &Map, pos: Point, size: usize) -> bool {
+
+	println!("{}", pos.y + size);
     for y in pos.y..(pos.y + size) {
         if map.data[y][pos.x..(pos.x + size)].contains("o") {
             return false;
