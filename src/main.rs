@@ -4,13 +4,9 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
-struct Point {
+struct Square {
     x: usize,
     y: usize,
-}
-
-struct Square {
-    pos: Point,
     size: usize,
 }
 
@@ -19,10 +15,10 @@ impl fmt::Display for Square {
         write!(
             f,
             "{},{}|{},{}",
-            self.pos.y,
-            self.pos.x,
-            self.pos.y + self.size,
-            self.pos.x + self.size
+            self.y,
+            self.x,
+            self.y + self.size - 1,
+            self.x + self.size - 1
         )
     }
 }
@@ -50,20 +46,22 @@ fn main() {
 
 fn search_square(map: Map) -> Square {
     let mut max_sq = Square {
-        pos: Point { x: 0, y: 0 },
+        x: 0,
+        y: 0,
         size: 0,
     };
     let mut size: usize = 1;
     let mut x = 0;
     let mut y = 0;
 
-    while y + size < map.height {
-        if check_square(&map, Point { x, y }, size) {
+    while y + size <= map.height {
+        if check_square(&map, Square { x, y, size }) {
             if size > max_sq.size {
                 max_sq = Square {
-                    pos: Point { x, y },
-                    size: size - 1,
-                }; // @note size or size - 1??
+                    x,
+                    y,
+                    size,
+                };
                 //println!("New Square: {}", max_sq);
                 size += 1;
             }
@@ -77,10 +75,10 @@ fn search_square(map: Map) -> Square {
     max_sq
 }
 
-fn check_square(map: &Map, pos: Point, size: usize) -> bool {
-   // println!("{}", pos.y + size);
-    for y in pos.y..(pos.y + size) {
-        if map.data[y][pos.x..(pos.x + size)].contains("o") {
+fn check_square(map: &Map, sq: Square) -> bool {
+    // println!("{}", pos.y + size);
+    for y in sq.y..(sq.y + sq.size) {
+        if map.data[y][sq.x..(sq.x + sq.size)].contains("o") {
             return false;
         }
     }
