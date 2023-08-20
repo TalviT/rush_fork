@@ -54,14 +54,22 @@ fn search_square(map: Map) -> Square {
     for y in 0..map.height {
         for x in 0..map.width {
             let max_size = std::cmp::min(map.width - x, map.height - y);
-
-            for size in (1..=max_size).rev() {
+            if max_size < max_sq.size {
+                break;
+            }
+            let mut size = max_size;
+            while size > 0 {
                 let square = Square { x, y, size };
-                if check_square(&map, &square) {
-                    if size > max_sq.size {
-                        max_sq = square;
+                match check_square(&map, &square) {
+                    Some(pos) => {
+                        size = std::cmp::max(pos.0, pos.1);
                     }
-                    break;
+                    None => {
+                        if size > max_sq.size {
+                            max_sq = square;
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -69,12 +77,11 @@ fn search_square(map: Map) -> Square {
     max_sq
 }
 
-fn check_square(map: &Map, sq: &Square) -> bool {
-    // println!("{}", pos.y + size);
+fn check_square(map: &Map, sq: &Square) -> Option<(usize, usize)> {
     for y in sq.y..(sq.y + sq.size) {
-        if map.data[y][sq.x..(sq.x + sq.size)].contains('o') {
-            return false;
-        }
+        if let Some(x) = map.data[y][sq.x..(sq.x + sq.size)].find('o') {
+            return Some((x, y - sq.y));
+        };
     }
-    true
+    None
 }
