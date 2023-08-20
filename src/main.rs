@@ -50,35 +50,29 @@ fn search_square(map: Map) -> Square {
         y: 0,
         size: 0,
     };
-    let mut size: usize = 1;
-    let mut x = 0;
-    let mut y = 0;
 
-    while y + size <= map.height && x + size <= map.width {
-        if check_square(&map, Square { x, y, size }) {
-            if size > max_sq.size {
-                max_sq = Square {
-                    x,
-                    y,
-                    size,
-                };
-                //println!("New Square: {}", max_sq);
-                size += 1;
+    for y in 0..map.height {
+        for x in 0..map.width {
+            let max_size = std::cmp::min(map.width - x, map.height - y);
+
+            for size in (1..=max_size).rev() {
+                let square = Square { x, y, size };
+                if check_square(&map, &square) {
+                    if size > max_sq.size {
+                        max_sq = square;
+                    }
+                    break;
+                }
             }
-        } else if x + size >= map.width {
-            x = 0;
-            y += 1;
-        } else {
-            x += 1;
         }
     }
     max_sq
 }
 
-fn check_square(map: &Map, sq: Square) -> bool {
+fn check_square(map: &Map, sq: &Square) -> bool {
     // println!("{}", pos.y + size);
     for y in sq.y..(sq.y + sq.size) {
-        if map.data[y][sq.x..(sq.x + sq.size)].contains("o") {
+        if map.data[y][sq.x..(sq.x + sq.size)].contains('o') {
             return false;
         }
     }
